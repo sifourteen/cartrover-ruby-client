@@ -67,7 +67,7 @@ class CartRover
 		return response
 	end
 
-	# Cancels an order. This call is only available for a few minutes after the order has been created.
+	# Cancels an existing order. This call is only available for a few minutes after the order has been created.
 	#
 	# @param [Hash #params] The parameters for the endpoint @see https://cartrover.atlassian.net/wiki/pages/viewpage.action?pageId=3997757
 	def cancel_order(params={})
