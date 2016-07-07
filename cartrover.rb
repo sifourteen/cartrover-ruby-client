@@ -119,8 +119,6 @@ class CartRover
 
 		params.each { |key, value| url += "&#{key}=#{URI.escape(value.to_s)}" }
 
-		puts url
-
 		return url
 	end
 
