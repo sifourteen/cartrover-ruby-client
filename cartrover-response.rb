@@ -19,7 +19,7 @@ class CartRoverResponse
 		@history = {}
 		@response = {}
 		@success = false
-		
+
 		if @code === 200
 			data = JSON.parse(response.body.to_s)
 
@@ -47,7 +47,7 @@ class CartRoverResponse
 		end
 	end
 
-	def to_s 
+	def to_s
 		return "{ \"code\": #{@code}, \"success\": #{@success}, \"headers\": #{JSON.generate(@headers)}, \"cookies\": #{JSON.generate(@cookies)}, \"history\": #{JSON.generate(@history)}, \"response\": #{JSON.generate(@response)} }"
 	end
 end

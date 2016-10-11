@@ -1,27 +1,27 @@
-require 'rest-client'
-require 'uri'
-require './cartrover-response'
+require "rest-client"
+require "uri"
+require "./cartrover-response"
 
 
 # CartRover API Client
 #
-# A lightweight API wrapper class for interacting with the CartRover API. 
-# Provides a set of convenience methods for making/processing requests made 
-# to each of the CartRover endpoints 
+# A lightweight API wrapper class for interacting with the CartRover API.
+# Provides a set of convenience methods for making/processing requests made
+# to each of the CartRover endpoints
 #
 # For documentation @see https://cartrover.atlassian.net/wiki/display/CART/CartRover+API+Documentation
 #
-# @author Devon Anderson 
+# @author Devon Anderson
 #
 
 module HTTP_Verb
-	GET = 'get'
-	POST = 'post'
-	PUT = 'put'
-	DELETE = 'delete'
+	GET = "get"
+	POST = "post"
+	PUT = "put"
+	DELETE = "delete"
 end
 
-class CartRover	
+class CartRover
 	# Initialize the client with your CartRover API username and API key
 	#
 	# @param [String #user] API username
@@ -30,27 +30,28 @@ class CartRover
 		@user = user
 		@key = key
 
-		@base_url = 'api.cartrover.com'
-		@version = 'v1'
-		@protocol = 'https'
+		@base_url = "api.cartrover.com"
+		@version = "v1"
+		@protocol = "https"
 	end
 
 	# Creates a new product order
 	#
 	# @param [Hash #params] The parameters for the endpoint @see https://cartrover.atlassian.net/wiki/pages/viewpage.action?pageId=3997742
 	def new_order(params={})
-		url = self.build_url(@protocol, 'cart/orders/cartrover')
+		url = self.build_url(@protocol, "cart/orders/cartrover")
 		response = self.make_request(HTTP_Verb::POST, url, params)
-		
+
 		return response
 	end
 
-	# Returns order information in the 'New Order' format
+	# Returns order information in the "New Order" format
 	#
 	# @param [String #ref] The order reference ID
 	# @param [Boolean #merchant] If set to true, will use the merchant account endpoint
 	def view_order(ref, merchant=false)
-		url = self.build_url(@protocol, (merchant ? 'merchant/orders/#{ref}' : 'cart/orders/#{ref}'))
+		puts ref,ref[:ref]
+		url = self.build_url(@protocol, (merchant ? "merchant/orders/#{ref[:ref]}" : "cart/orders/#{ref[:ref]}" ))
 		response = self.make_request(HTTP_Verb::GET, url)
 
 		return response
@@ -61,7 +62,7 @@ class CartRover
 	# @param [String #rer] The order reference ID
 	# @param [Boolean #merchant] If set to true, will use the merchant account endpoint
 	def view_order_status(ref, merchant=false)
-		url = self.build_url(@protocol, (merchant ? 'merchant/orders/status/#{ref}' : 'cart/orders/status/#{ref}'))
+		url = self.build_url(@protocol, (merchant ? "merchant/orders/status/#{ref[:ref]}" : "cart/orders/status/#{ref[:ref]}"))
 		response = self.make_request(HTTP_Verb::GET, url)
 
 		return response
@@ -71,7 +72,7 @@ class CartRover
 	#
 	# @param [Hash #params] The parameters for the endpoint @see https://cartrover.atlassian.net/wiki/pages/viewpage.action?pageId=3997757
 	def cancel_order(params={})
-		url = self.build_url(@protocol, 'cart/orders/cancel')
+		url = self.build_url(@protocol, "cart/orders/cancel")
 		response = self.make_request(HTTP_Verb::POST, url, params)
 
 		return response
@@ -81,7 +82,7 @@ class CartRover
 	#
 	# @param [String #sku] The product SKU
 	def product_inventory(sku)
-		url = self.build_url(@protocol, 'merchant/inventory/#{sku}')
+		url = self.build_url(@protocol, "merchant/inventory/#{sku}")
 		response = self.make_request(HTTP_Verb::GET, url)
 
 		return response
@@ -91,15 +92,15 @@ class CartRover
 	#
 	# @params [Hash #params] the parameters for the endpoint @see https://cartrover.atlassian.net/wiki/pages/viewpage.action?pageId=10846218
 	def merchant_inventory(params={})
-		url = self.build_url(@protocol, 'merchant/inventory', params)
+		url = self.build_url(@protocol, "merchant/inventory", params)
 		response = self.make_request(HTTP_Verb::GET, url)
 
 		return response
 	end
 
 	# Returns all acceptable warehouse shipping methods
-	def ship_methods() 
-		url = self.build_url(@protocol, 'wms/shipmethod/list')
+	def ship_methods()
+		url = self.build_url(@protocol, "wms/shipmethod/list")
 		response = self.make_request(HTTP_Verb::GET, url)
 
 		return response
@@ -127,9 +128,9 @@ class CartRover
 	# @param [String #method] The HTTP verb to use (GET, POST, PUT, DELETE)
 	# @param [String #url] The url to make the request to
 	# @param [Hash #params] The payload to include with the request
-	def make_request(method, url, params={})
-		begin 
-			response = RestClient::Request.execute(method: method, url: url, payload: params);
+	def make_request(method, url, params={}, headers={})
+		begin
+			response = RestClient::Request.execute(method: method, url: url, payload: params, headers: {content_type: :json, accept: :json})
 
 			return CartRoverResponse.new(response)
 		rescue RestClient::ExceptionWithResponse => err

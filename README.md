@@ -47,3 +47,31 @@ cartrover.merchant_inventory({ ... })
 # Returns all acceptable warehouse shipping methods
 cartrover.ship_methods()
 ```
+
+#### Product Order sample:
+
+```json
+{
+    "cust_ref" : "orderID",
+    "ship_company" : "Soaps",
+    "ship_address_1" : "99 Paper Town",
+    "ship_address_2" : "",
+    "ship_city" : "San Francisco",
+    "ship_state" : "CA",
+    "ship_zip" : "94107",
+    "ship_country" : "USA",
+    "ship_is_billing" : true,
+    "items" : 
+    [
+        {
+            "item" : "TEST01",
+            "quantity" : 2
+        },
+        {
+            "item" : "TEST02",
+            "quantity" : 1
+        }
+    ]
+}
+
+```
